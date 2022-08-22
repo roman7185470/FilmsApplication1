@@ -1,11 +1,15 @@
 package ru.lishukroman.filmsapplication
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import ru.lishukroman.filmsapplication.databinding.AdapterMovieBinding
 
-class FilmRecyclerViewAdapter: RecyclerView.Adapter<FilmRecyclerViewHolder>() {
+class FilmRecyclerViewAdapter(private val callBackCommunicator: CallBackCommunicator): RecyclerView.Adapter<FilmRecyclerViewHolder>() {
+
+    private val TAG: String = "FilmRecyclerViewAdapter"
 
     var movies = mutableMapOf<String,List<Movie>>()
 
@@ -28,6 +32,14 @@ class FilmRecyclerViewAdapter: RecyclerView.Adapter<FilmRecyclerViewHolder>() {
         val movie = movies.get("items")!![position]
         holder.binding.name.text = movie.title
         holder.binding.director.text = movie.directorName
+
+        holder.binding.root.setOnClickListener {
+            Toast.makeText(holder.binding.root.context, "Кликаем на пункт ${holder.binding.name.text}",Toast.LENGTH_SHORT).show()
+
+            Log.d(TAG,holder.binding.name.text.toString())
+
+            this.callBackCommunicator.passData(movie)
+        }
 
     }
 

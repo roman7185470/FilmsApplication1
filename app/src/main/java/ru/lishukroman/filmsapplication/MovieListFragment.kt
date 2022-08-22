@@ -2,6 +2,7 @@ package ru.lishukroman.filmsapplication
 
 import android.graphics.drawable.ClipDrawable.HORIZONTAL
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -15,12 +16,14 @@ import ru.lishukroman.filmsapplication.databinding.FragmentMovieListBinding
 
 class MovieListFragment : Fragment() {
 
+    private lateinit var callBackCommunicator: CallBackCommunicator
+
     private val TAG: String = "MovieListFragment"
     private lateinit var fragmentMovieListBinding: FragmentMovieListBinding
     lateinit var viewModel: MainViewModel
 
     private val retrofitService = RetrofitService.getInstance()
-    val adapter = FilmRecyclerViewAdapter()
+    lateinit var adapter: FilmRecyclerViewAdapter
 
 
     override fun onCreateView(
@@ -33,26 +36,27 @@ class MovieListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentMovieListBinding.bind(view)
-        fragmentMovieListBinding = binding
 
+        callBackCommunicator = requireActivity() as CallBackCommunicator
+
+        adapter = FilmRecyclerViewAdapter(callBackCommunicator)
+        val binding = FragmentMovieListBinding.bind(view)
+
+        fragmentMovieListBinding = binding
 
         viewModel = ViewModelProvider(this, MyViewModelFactory(MainRepository(retrofitService))).get(MainViewModel::class.java)
 
         val linearLayoutManager:LinearLayoutManager = LinearLayoutManager(view.context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+
         binding.recyclerviewFilms.layoutManager = linearLayoutManager
         binding.recyclerviewFilms.adapter = adapter
-
-
-
 
         viewModel.movieList.observe(viewLifecycleOwner, Observer {
             adapter.setMovieList(it)
         })
 
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
-
             Log.d(TAG,"FragmentErrorMessage")
         })
         viewModel.getAllMovies()
