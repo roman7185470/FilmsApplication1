@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main), CallBackCommunic
     override fun passData(message: Movie) {
         val bundle = Bundle()
         bundle.putString("input_txt", message.title)
-
+        bundle.putString("input_rls",message.releaseYear)
         Log.d(TAG, message.title)
 //        Toast.makeText(this,"MainActivity: $message",Toast.LENGTH_LONG).show()
 

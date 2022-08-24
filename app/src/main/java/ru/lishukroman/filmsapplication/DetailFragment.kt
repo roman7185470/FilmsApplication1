@@ -20,6 +20,8 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         view.findViewById<TextView>(R.id.fragment_detail_text).text = arguments?.getString("input_txt")
+        view.findViewById<TextView>(R.id.fragment_detail_text).text = arguments?.getString("input_rls")
     }
 }
